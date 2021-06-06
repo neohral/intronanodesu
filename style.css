@@ -1,0 +1,13 @@
+.message {
+  white-space: nowrap;
+  height: 132px;
+  overflow: scroll;
+}
+.parent {
+  position: relative;
+}
+.child {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
