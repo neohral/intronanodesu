@@ -1,24 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<title>ほねすとりーむ</title>
+	<title>いんとろ</title>
   <link rel="stylesheet" type="text/css" href="honest.css">
 	<meta charset="UTF-8">
   </head>
   <body>
-    <div class="spNone">
-    <form name="base_form">
-      君の名は<br>
-    <input id = "pname" type="text" name="pname" value="noname">
-    <input type="button" name="batu" value="入室" onClick="inroom()">
+    <form action="honestream.html" id="formId">
+      ログイン名：<br>
+      <input id = "name" type="text" name="name" value="noname">
+      <input type="submit" value="入室">
     </form>
   </div>
-  <script type="text/javascript">
-  function inroom(){
-    var str = "honestream.html?name="+document.getElementById("pname").value;
-    console.log(str);
-    location.href = str;
-  }
-  </script>
   </body>
 </html>
