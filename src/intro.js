@@ -33,13 +33,16 @@ import {
     pauser.innerHTML = "出題者:"+hostid + "　回答者："+sender;
   }
   function intropause(sender) {
-    isPause = getStorage("introStats")[0].isPause;
+    if(isPause != getStorage("introStats")[0].isPause){
+      isPause=false;
+    }
     if(!isPause){
       isPause=true;
       if(playerHost){
         let store = {
           video: getStorage("introStats")[0].video,
           pauseTime: getStorage("introStats")[0].pauseTime,
+          startPauseTime: new Date().getTime(),
           anser:sender,
           isPause: true,
           inv:getStorage("introStats")[0].inv

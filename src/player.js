@@ -81,9 +81,10 @@ let setpauseTime = (time)=>{
 let getpauseTime = ()=>{
   return pauseTime
 }
-function startPlayer(time,_pausetime) {
+function startPlayer(time,_pausetime,_startPauseTime) {
   startTime = time;
   pauseTime = _pausetime;
+  startPauseTime = _startPauseTime;
   player.youtube.playVideo();
 }
 export { player, ableStateChange, IntroState, PlayerState, state, startPlayer,syncStart,getpauseTime};

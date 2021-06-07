@@ -101,18 +101,19 @@ ws.addEventListener("message", (e) => {
       let startTime = new Date(json.time).getTime() + user.lag;
       startTime = startTime - getStorage("video")[0].startSec * 1000;
       //setTweetButton(`${getStorage("video")[0].title}`);
-      playerStart(startTime,0);
+      playerStart(startTime,0,0);
       if (user.isHost || getStorage("video")[0].pid == user.id) {
         st.style.visibility = "visible";
       } else {
         st.style.visibility = "hidden";
       }
       sethost(-1);
+      invisible(false);
       sethost(getStorage("video")[0].pid);
       //intro用初期設定
-      invisible(false);
       if (getStorage("video")[0].pid == user.id) {
         inv.style.visibility = "visible";
+        invisible(false);
       } else {
         inv.style.visibility = "hidden";
       }
@@ -132,7 +133,6 @@ ws.addEventListener("message", (e) => {
           isPause: false,
         };
         setStorage("introStats", stores);
-
         pushStorage("videoLog", getStorage("video")[0]);
         removeStorage("video", 0);
       }
@@ -160,13 +160,13 @@ ws.addEventListener("message", (e) => {
           ) {
             if (tloadflg) {
               sethost(-1);
-              sethost(getStorage("serverstats")[0].video.pid);
               invisible(getStorage("introStats")[0].inv);
+              sethost(getStorage("serverstats")[0].video.pid);
               if(getStorage("introStats")[0].isPause){
-                playerStart(startTime,getStorage("introStats")[0].pauseTime);
+                playerStart(startTime,getStorage("introStats")[0].pauseTime,getStorage("introStats")[0].startPauseTime);
                 intropause(getStorage("introStats")[0].anser);
               }else{
-                playerStart(startTime,getStorage("introStats")[0].pauseTime);
+                playerStart(startTime,getStorage("introStats")[0].pauseTime,0);
               }
               ableTload = false;
             }
@@ -199,7 +199,7 @@ function viewVideoList() {
   });
   mesdocument.scrollTop = 24 * (getStorage("videoLog").length - 1);
 }
-function playerStart(time,pauseTime) {
+function playerStart(time,pauseTime,startPauseTime) {
   endev = player.youtube.on("stateChange", (event) => {
     //プレイヤー終了
     if (event.data == PlayerState.ENDED) {
@@ -218,7 +218,7 @@ function playerStart(time,pauseTime) {
     }
   });
   ableStateChange(IntroState.PLAYING);
-  startPlayer(time,pauseTime);
+  startPlayer(time,pauseTime,startPauseTime);
   playing = true;
 }
 let re = /^( |　)*$/g;
