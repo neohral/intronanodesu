@@ -28,7 +28,6 @@ import {
   ctx.fillStyle = 'white';
   ctx.fillRect(0,0,1000,1000);
   pp.appendChild(cs);
-  invisible(false);
   function render(sender){
     pauser.innerHTML = "出題者:"+hostid + "　回答者："+sender;
   }
@@ -67,7 +66,7 @@ import {
       pp.style.opacity= 0.01;
       pp.style.display= 'block';
     }
-    if(playerHost){
+    if(user.isHost){
       let store = {
         video: getStorage("introStats")[0].video,
         pauseTime: getStorage("introStats")[0].pauseTime,
@@ -130,7 +129,7 @@ import {
           break;
         case "pauseEnd":
           syncStart();
-          if(playerHost){
+          if(user.isHost){
             let store = {
               video: getStorage("introStats")[0].video,
               pauseTime: getpauseTime(),
