@@ -1,46 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>いんとろ</title>
-    <link rel="stylesheet" href="style.css" />
+	<title>ほねすとりーむ</title>
+  <link rel="stylesheet" type="text/css" href="honest.css">
+	<meta charset="UTF-8">
   </head>
   <body>
-    <div id="name"><strong>login...</strong><br /></div>
-    <div id="pauser"></div>
-    <div id="pla" class="parent">
-      <div id="player"></div>
-      <div id="players" class="child"></div>
-    </div>
-    <form name="bar">
-      <input id="volume" type="range" value="1" min="0" max="100" step="1" />
+    <div class="spNone">
+    <form name="base_form">
+      君の名は<br>
+    <input id = "pname" type="text" name="pname" value="noname">
+    <input type="button" name="batu" value="入室" onClick="inroom()">
     </form>
-    <div id="inputForm">
-      <input
-        type="text"
-        value=""
-        id="msg"
-        size="40"
-        placeholder="link or query"
-      />
-      <input type="text" value="" id="ssec" size="3" placeholder="delay" />
-      <input type="checkbox" id="playlist" />playlist
-      <input type="checkbox" id="playlistshuffle" />shuffle
-      <input type="button" value="send" id="btn" />
-      <input type="button" value="pause" id="pauseBtn" />
-    </div>
-    <input type="button" value="skip" id="startbtn" />
-    <div id="hostUi">
-      <input type="button" value="reset" id="resetbtn" />
-      <input type="checkbox" id="roop" />ループする
-    </div>
-    <div id="tweet-area"></div>
-    <script
-      src="https://platform.twitter.com/widgets.js"
-      charset="utf-8"
-    ></script>
-    <br />
-    <hr />
-    <div id="messages" class="message" />
-    <script src="dist/app.js"></script>
+  </div>
+  <script type="text/javascript">
+  function inroom(){
+    var str = "honestream.html?name="+document.getElementById("pname").value;
+    console.log(str);
+    location.href = str;
+  }
+  </script>
   </body>
 </html>

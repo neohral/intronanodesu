@@ -160,6 +160,8 @@ userManagerSocket = function (wss) {
       let json = JSON.parse(message);
       switch (json.title) {
         case "setLag":
+          //IDにname付与もここで
+          getUserByid(json.protoId).id = json.sender
           console.log(`[LOG]LAG:${json.sender}>${json.lag}`);
           getUserByid(json.sender).lag = json.lag;
           break;
@@ -282,4 +284,5 @@ function voteEnd() {
 }
 server.listen(3000);
 getStorage("serverstats").push({ playing: false });
+getStorage("introStats").push({ pauseTime: 0 });
 userManagerSocket(wss);

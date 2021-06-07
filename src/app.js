@@ -23,8 +23,8 @@ import {
   setStorage,
 } from "./storage";
 import { getParam, getSec } from "./commonLib";
-import { def,sethost,receiveIntro } from "./intro";
-def();
+import { introDef,sethost,receiveIntro,invisible,intropause } from "./intro";
+introDef();
 /*デバッグ用
 import { setfavurl } from "./test";
 setfavurl();
@@ -40,6 +40,7 @@ class Code {
 }
 const msg = document.getElementById("btn");
 const st = document.getElementById("startbtn");
+const inv = document.getElementById("invBtn");
 const reset = document.getElementById("resetbtn");
 const roop = document.getElementById("roop");
 const playlist = document.getElementById("playlist");
@@ -48,6 +49,7 @@ const hostUi = document.getElementById("hostUi");
 const pauser = document.getElementById('pauser');
 hostUi.style.visibility = "hidden";
 st.style.visibility = "hidden";
+inv.style.visibility = "hidden";
 let playing = false;
 //途中loadキャンセルフラグ
 let tloadflg = false;
@@ -87,6 +89,7 @@ ws.addEventListener("message", (e) => {
       console.log(
         `LOAD:${getStorage("video")[0].code},${getStorage("video")[0].startSec}`
       );
+      invisible(false);
       player.youtube.loadVideoById(
         getStorage("video")[0].code,
         getStorage("video")[0].startSec
@@ -98,7 +101,7 @@ ws.addEventListener("message", (e) => {
       let startTime = new Date(json.time).getTime() + user.lag;
       startTime = startTime - getStorage("video")[0].startSec * 1000;
       //setTweetButton(`${getStorage("video")[0].title}`);
-      playerStart(startTime);
+      playerStart(startTime,0);
       if (user.isHost || getStorage("video")[0].pid == user.id) {
         st.style.visibility = "visible";
       } else {
@@ -106,6 +109,13 @@ ws.addEventListener("message", (e) => {
       }
       sethost(-1);
       sethost(getStorage("video")[0].pid);
+      //intro用初期設定
+      invisible(false);
+      if (getStorage("video")[0].pid == user.id) {
+        inv.style.visibility = "visible";
+      } else {
+        inv.style.visibility = "hidden";
+      }
       if (user.isHost) {
         let store = {
           video: getStorage("video")[0],
@@ -113,6 +123,16 @@ ws.addEventListener("message", (e) => {
           playing: true,
         };
         setStorage("serverstats", store);
+
+        let stores = {
+          video: getStorage("video")[0],
+          pauseTime: 0,
+          pauseStartTime: 0,
+          anser:getStorage("video")[0].pid,
+          isPause: false,
+        };
+        setStorage("introStats", stores);
+
         pushStorage("videoLog", getStorage("video")[0]);
         removeStorage("video", 0);
       }
@@ -120,13 +140,14 @@ ws.addEventListener("message", (e) => {
     case "sync_storage":
       viewVideoList();
       if (!playing & getStorage("serverstats")[0].playing & ableTload) {
+        let pauseTime = 0;
+        pauseTime = new Date(getStorage("introStats")[0].pauseTime).getTime();
         let startTime =
-          new Date(getStorage("serverstats")[0].startTime).getTime() + user.lag;
-        let startSec = (new Date().getTime() - startTime) / 1000;
+          new Date(getStorage("serverstats")[0].startTime).getTime() + user.lag; 
+        let startSec = (new Date().getTime() - startTime - pauseTime) / 1000;
         console.log(
           `TLOAD:${getStorage("serverstats")[0].video.code},${startSec}`
         );
-      
         player.youtube.loadVideoById(
           getStorage("serverstats")[0].video.code,
           startSec
@@ -140,8 +161,13 @@ ws.addEventListener("message", (e) => {
             if (tloadflg) {
               sethost(-1);
               sethost(getStorage("serverstats")[0].video.pid);
-              //setTweetButton(getStorage("serverstats")[0].video.title);
-              playerStart(startTime);
+              invisible(getStorage("introStats")[0].inv);
+              if(getStorage("introStats")[0].isPause){
+                playerStart(startTime,getStorage("introStats")[0].pauseTime);
+                intropause(getStorage("introStats")[0].anser);
+              }else{
+                playerStart(startTime,getStorage("introStats")[0].pauseTime);
+              }
               ableTload = false;
             }
             player.youtube.off(ev);
@@ -163,18 +189,17 @@ function viewVideoList() {
   mesdocument.innerHTML = "";
   getStorage("videoLog").forEach(function (log, i) {
     if (i == getStorage("videoLog").length - 1) {
-      mesdocument.innerHTML += `<div><B>PLAYING</B>→<a href= "https://www.youtube.com/watch?v=${log.code}" target="_blank">${log.title}</a> 🦴${log.search}🦴</div>`;
+      mesdocument.innerHTML += `<div><B>PLAYING</B>→出題者：${log.pid}</div>`;
     } else {
       mesdocument.innerHTML += `<div><a href= "https://www.youtube.com/watch?v=${log.code}" target="_blank">${log.title}</a> 🦴${log.search}🦴</div>`;
     }
   });
   getStorage("video").forEach(function (log, i) {
-    mesdocument.innerHTML += `<div><a href= "https://www.youtube.com/watch?v=${log.code}" target="_blank">${log.title}</a>🦴${log.search}🦴</div>`;
+    mesdocument.innerHTML += `<div>出題者：${log.pid}</div>`;
   });
   mesdocument.scrollTop = 24 * (getStorage("videoLog").length - 1);
 }
-function playerStart(time) {
-  ableStateChange(IntroState.PLAYING);
+function playerStart(time,pauseTime) {
   endev = player.youtube.on("stateChange", (event) => {
     //プレイヤー終了
     if (event.data == PlayerState.ENDED) {
@@ -192,7 +217,8 @@ function playerStart(time) {
       player.youtube.off(endev);
     }
   });
-  startPlayer(time);
+  ableStateChange(IntroState.PLAYING);
+  startPlayer(time,pauseTime);
   playing = true;
 }
 let re = /^( |　)*$/g;

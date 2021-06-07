@@ -13,11 +13,19 @@ let receive = ws => {
     let json = JSON.parse(event.data);
     switch (json.title) {
       case "welcome":
-        user = new User(json.user.id, json.user.room, "noname");
+        //名前をIDに付与
+        let urlParams = new URLSearchParams(window.location.search);
+        let urlname=urlParams.get('name');
+        if(urlname==null){
+          urlname = "noname"
+        }
+        let username = `${urlname}#${json.user.id}`;
+        user = new User(username, json.user.room, username);
         user.lag = new Date().getTime() - json.time;
         playercnt = json.playercnt - 1;
         let data = {
-          sender: user.id,
+          protoId: json.user.id,
+          sender: username,
           title: "setLag",
           lag: user.lag
         };
