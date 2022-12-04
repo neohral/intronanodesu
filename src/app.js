@@ -23,7 +23,7 @@ import {
   setStorage,
 } from "./storage";
 import { getParam, getSec } from "./commonLib";
-import { introDef,sethost,receiveIntro,invisible,intropause } from "./intro";
+import { introDef, sethost, receiveIntro, invisible, intropause, ctx } from "./intro";
 introDef();
 /*デバッグ用
 import { setfavurl } from "./test";
@@ -101,7 +101,7 @@ ws.addEventListener("message", (e) => {
       let startTime = new Date(json.time).getTime() + user.lag;
       startTime = startTime - getStorage("video")[0].startSec * 1000;
       //setTweetButton(`${getStorage("video")[0].title}`);
-      playerStart(startTime,0,0);
+      playerStart(startTime, 0, 0);
       if (user.isHost || getStorage("video")[0].pid == user.id) {
         st.style.visibility = "visible";
       } else {
@@ -111,13 +111,16 @@ ws.addEventListener("message", (e) => {
       invisible(false);
       sethost(getStorage("video")[0].pid);
       //intro用初期設定
+      st.value = "スキップ";
       if (getStorage("video")[0].pid == user.id) {
+        st.style.visibility = "visible";
         inv.style.visibility = "visible";
         invisible(false);
       } else {
         inv.style.visibility = "hidden";
       }
       if (user.isHost) {
+        st.style.visibility = "visible";
         let store = {
           video: getStorage("video")[0],
           startTime: startTime - user.lag,
@@ -129,7 +132,7 @@ ws.addEventListener("message", (e) => {
           video: getStorage("video")[0],
           pauseTime: 0,
           pauseStartTime: 0,
-          anser:getStorage("video")[0].pid,
+          anser: getStorage("video")[0].pid,
           isPause: false,
         };
         setStorage("introStats", stores);
@@ -143,7 +146,7 @@ ws.addEventListener("message", (e) => {
         let pauseTime = 0;
         pauseTime = new Date(getStorage("introStats")[0].pauseTime).getTime();
         let startTime =
-          new Date(getStorage("serverstats")[0].startTime).getTime() + user.lag; 
+          new Date(getStorage("serverstats")[0].startTime).getTime() + user.lag;
         let startSec = (new Date().getTime() - startTime - pauseTime) / 1000;
         console.log(
           `TLOAD:${getStorage("serverstats")[0].video.code},${startSec}`
@@ -162,11 +165,11 @@ ws.addEventListener("message", (e) => {
               sethost(-1);
               invisible(getStorage("introStats")[0].inv);
               sethost(getStorage("serverstats")[0].video.pid);
-              if(getStorage("introStats")[0].isPause){
-                playerStart(startTime,getStorage("introStats")[0].pauseTime,getStorage("introStats")[0].startPauseTime);
+              if (getStorage("introStats")[0].isPause) {
+                playerStart(startTime, getStorage("introStats")[0].pauseTime, getStorage("introStats")[0].startPauseTime);
                 intropause(getStorage("introStats")[0].anser);
-              }else{
-                playerStart(startTime,getStorage("introStats")[0].pauseTime,0);
+              } else {
+                playerStart(startTime, getStorage("introStats")[0].pauseTime, 0);
               }
               ableTload = false;
             }
@@ -182,6 +185,10 @@ ws.addEventListener("message", (e) => {
       if (user.isHost) {
         skipVideo();
       }
+      break;
+    case "nextQuiz":
+      skipVideo();
+      break;
   }
 });
 function viewVideoList() {
@@ -199,7 +206,7 @@ function viewVideoList() {
   });
   mesdocument.scrollTop = 24 * (getStorage("videoLog").length - 1);
 }
-function playerStart(time,pauseTime,startPauseTime) {
+function playerStart(time, pauseTime, startPauseTime) {
   endev = player.youtube.on("stateChange", (event) => {
     //プレイヤー終了
     if (event.data == PlayerState.ENDED) {
@@ -218,7 +225,7 @@ function playerStart(time,pauseTime,startPauseTime) {
     }
   });
   ableStateChange(IntroState.PLAYING);
-  startPlayer(time,pauseTime,startPauseTime);
+  startPlayer(time, pauseTime, startPauseTime);
   playing = true;
 }
 let re = /^( |　)*$/g;
@@ -330,7 +337,7 @@ document.getElementById("inputForm").addEventListener("keydown", (event) => {
     clickSend();
   }
 });
-st.addEventListener("click", skipVideo, false);
+//st.addEventListener("click", skipVideo, false);
 player.youtube.on("error", (event) => {
   console.log(`[LOG]:playerError->${event.data}`);
   setTimeout(() => {
