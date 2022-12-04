@@ -1,5 +1,5 @@
 let host = window.document.location.host.replace(/:.*/, "");
-let ws = new WebSocket("ws://" + host + ":3000");
+let ws = new WebSocket("wss://" + host + ":3002");
 let send = mes => {
   ws.send(JSON.stringify(mes));
 };
