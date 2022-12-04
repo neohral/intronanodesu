@@ -1,5 +1,6 @@
 let host = window.document.location.host.replace(/:.*/, "");
-let ws = new WebSocket("wss://" + host + ":3002");
+let ws;
+document.getElementById("loginbtn").addEventListener("click", ()=>{ws = new WebSocket("wss://" + host + ":3002")}, false);
 let send = mes => {
   ws.send(JSON.stringify(mes));
 };
