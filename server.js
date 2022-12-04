@@ -3,11 +3,18 @@
  */
 let fs = require("fs");
 let WebSocketServer = require("ws").Server,
-  http = require("http"),
+  http = require("https"),
   express = require("express"),
   app = express();
 app.use(express.static(__dirname + "/"));
-let server = http.createServer(app);
+
+let options = {
+  key:  fs.readFileSync('/etc/letsencrypt/live/honepr.work/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/honepr.work/cert.pem')
+};
+
+let server = http.createServer(options,app);
+
 let wss = new WebSocketServer({ server });
 
 //接続時
@@ -282,7 +289,7 @@ function voteEnd() {
     broadcast(data);
   }
 }
-server.listen(3000);
+server.listen(3002);
 getStorage("serverstats").push({ playing: false });
 getStorage("introStats").push({ pauseTime: 0 });
 userManagerSocket(wss);
