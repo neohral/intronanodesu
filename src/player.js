@@ -85,6 +85,7 @@ function startPlayer(time,_pausetime,_startPauseTime) {
   startTime = time;
   pauseTime = _pausetime;
   startPauseTime = _startPauseTime;
+  console.log("unmute");
   player.youtube.unMute();
   player.youtube.playVideo();
 }

@@ -46,7 +46,7 @@ const roop = document.getElementById("roop");
 const playlist = document.getElementById("playlist");
 const shuffle = document.getElementById("playlistshuffle");
 const hostUi = document.getElementById("hostUi");
-const pauser = document.getElementById('pauser');
+const pauseb = document.getElementById("pauseBtn");
 hostUi.style.visibility = "hidden";
 st.style.visibility = "hidden";
 inv.style.visibility = "hidden";
@@ -112,6 +112,7 @@ ws.addEventListener("message", (e) => {
       sethost(getStorage("video")[0].pid);
       //intro用初期設定
       st.value = "正解者無し(次の問題へ)";
+      pauseb.value = "回答";
       if (getStorage("video")[0].pid == user.id) {
         st.style.visibility = "visible";
         inv.style.visibility = "visible";
