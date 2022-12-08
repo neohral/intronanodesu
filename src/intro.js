@@ -179,7 +179,7 @@ let receiveIntro = ws => {
           playse("se/wrong.mp3");
           pauseb.value="回答";
         }
-        skip.value = "スキップ";
+        skip.value = "正解者無し(次の問題へ)";
         isPause = false;
         pauser.innerHTML = "出題者:" + hostid
         break;

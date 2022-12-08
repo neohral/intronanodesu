@@ -112,7 +112,7 @@ ws.addEventListener("message", (e) => {
       sethost(getStorage("video")[0].pid);
       //intro用初期設定
       player.youtube.unMute();
-      st.value = "スキップ";
+      st.value = "正解者無し(次の問題へ)";
       if (getStorage("video")[0].pid == user.id) {
         st.style.visibility = "visible";
         inv.style.visibility = "visible";
