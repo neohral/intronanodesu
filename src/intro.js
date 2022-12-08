@@ -39,13 +39,13 @@ function render(sender) {
 }
 function intropause(sender) {
   if (isPause != getStorage("introStats")[0].isPause) {
-    pauseb.value="回答";
     isPause = false;
   }
   if (!isPause) {
     playse("se/buzer.mp3");
     isPause = true;
     if (playerHost) {
+      pauseb.value="不正解";
       let store = {
         video: getStorage("introStats")[0].video,
         pauseTime: getStorage("introStats")[0].pauseTime,
@@ -55,7 +55,6 @@ function intropause(sender) {
         inv: getStorage("introStats")[0].inv
       };
       setStorage("introStats", store);
-      pauseb.value="不正解";
     }
     render(sender);
     ableStateChange(IntroState.INTRO);
@@ -176,6 +175,7 @@ let receiveIntro = ws => {
         }
         if (json.playse) {
           playse("se/wrong.mp3");
+          pauseb.value="回答";
         }
         skip.value = "スキップ";
         isPause = false;
