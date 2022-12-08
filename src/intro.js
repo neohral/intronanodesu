@@ -36,6 +36,9 @@ pp.appendChild(cs);
 function render(sender) {
   pauser.innerHTML = "出題者:" + hostid + "　回答者：" + sender;
   skip.value = "正解";
+  if(playerHost){
+    pauseb.value = "不正解";
+  }
 }
 function intropause(sender) {
   if (isPause != getStorage("introStats")[0].isPause) {
@@ -45,7 +48,6 @@ function intropause(sender) {
     playse("se/buzer.mp3");
     isPause = true;
     if (playerHost) {
-      pauseb.value="不正解";
       let store = {
         video: getStorage("introStats")[0].video,
         pauseTime: getStorage("introStats")[0].pauseTime,
