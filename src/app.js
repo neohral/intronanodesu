@@ -111,6 +111,7 @@ ws.addEventListener("message", (e) => {
       invisible(false);
       sethost(getStorage("video")[0].pid);
       //intro用初期設定
+      player.unMute();
       st.value = "スキップ";
       if (getStorage("video")[0].pid == user.id) {
         st.style.visibility = "visible";

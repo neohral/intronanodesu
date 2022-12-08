@@ -39,6 +39,7 @@ function render(sender) {
 }
 function intropause(sender) {
   if (isPause != getStorage("introStats")[0].isPause) {
+    pauseb.value="回答";
     isPause = false;
   }
   if (!isPause) {
@@ -54,6 +55,7 @@ function intropause(sender) {
         inv: getStorage("introStats")[0].inv
       };
       setStorage("introStats", store);
+      pauseb.value="不正解";
     }
     render(sender);
     ableStateChange(IntroState.INTRO);
