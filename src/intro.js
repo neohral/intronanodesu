@@ -35,8 +35,8 @@ pp.appendChild(cs);
 
 function render(sender) {
   pauser.innerHTML = "出題者:" + hostid + "　回答者：" + sender;
-  skip.value = "正解";
   if(playerHost){
+    skip.value = "正解";
     pauseb.value = "不正解";
   }
 }
