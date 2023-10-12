@@ -9,8 +9,8 @@ let WebSocketServer = require("ws").Server,
 app.use(express.static(__dirname + "/"));
 
 let options = {
-  key:  fs.readFileSync('/etc/letsencrypt/live/honepr.work/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/honepr.work/cert.pem')
+  key:  fs.readFileSync('/etc/letsencrypt/live/honepr.jp/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/honepr.jp/cert.pem')
 };
 
 let server = http.createServer(options,app);
